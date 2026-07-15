@@ -5,10 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>助成金ナビ — 雇用関係助成金ロードマップ</title>
 <meta name="description" content="事業規模・雇用予定などのチェックリストに答えるだけで、活用できる厚生労働省の雇用関係助成金がわかる診断サイト。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   * { box-sizing: border-box; }
   html { scroll-behavior: smooth; }
-  body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic", sans-serif; }
+  body { margin: 0; font-family: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic", sans-serif; }
 
   :root {
     --paper: #eef0ea;
@@ -47,10 +50,10 @@
   }
 
   body { background: var(--paper); color: var(--ink); line-height: 1.7; }
-  h1, h2, h3 { font-family: 'Fraunces', Georgia, serif; font-weight: 600; margin: 0; }
+  h1, h2, h3 { font-family: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic", sans-serif; font-weight: 600; margin: 0; }
   p { margin: 0.8rem 0 0; max-width: 68ch; color: var(--ink-soft); }
   a { color: var(--accent); }
-  .jp-serif { font-family: 'Fraunces', Georgia, serif; }
+  .jp-serif { font-family: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic", sans-serif; }
   .tabular { font-variant-numeric: tabular-nums; }
 
   header.hero { background: var(--ink); color: var(--paper); padding: 3rem 1.5rem 2.4rem; }
@@ -61,7 +64,7 @@
   .stat-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px,1fr)); gap: 1rem; margin-top: 1.6rem; }
   .stat { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; padding: 0.9rem 1.1rem; }
   .stat .k { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em; color: #a8b0a4; margin-bottom: 0.3rem; }
-  .stat .v { font-family: 'Fraunces', serif; font-weight: 600; font-size: 1.3rem; color: var(--paper); }
+  .stat .v { font-family: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic", sans-serif; font-weight: 600; font-size: 1.3rem; color: var(--paper); }
   .stat .d { font-size: 0.76rem; color: #a8b0a4; margin-top: 0.2rem; }
 
   nav.toc { position: sticky; top: 0; z-index: 10; background: var(--paper); border-bottom: 1px solid var(--line); }
@@ -110,7 +113,7 @@
   }
   .picker select:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
   .dial-row { display: flex; flex-direction: column; gap: 0.6rem; }
-  .dial-readout { font-family: 'Fraunces', serif; font-weight: 600; font-size: 1.5rem; color: var(--accent); }
+  .dial-readout { font-family: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic", sans-serif; font-weight: 600; font-size: 1.5rem; color: var(--accent); }
   input[type="range"] {
     -webkit-appearance: none; appearance: none; width: 100%; height: 6px; border-radius: 100px;
     background: var(--line); outline: none; cursor: pointer; margin: 0.4rem 0;
@@ -172,8 +175,8 @@
   .sim-panel { border-radius: 8px; padding: 1.2rem 1.3rem; }
   .sim-panel.ok { background: var(--sage-wash); border: 1px solid var(--sage); }
   .sim-panel.alert { background: var(--rust-wash); border: 1px solid var(--rust); }
-  .sim-headline { font-family: 'Fraunces', serif; font-weight: 600; font-size: 1.05rem; display: flex; align-items: center; gap: 0.5rem; }
-  .sim-big { font-family: 'Fraunces', serif; font-weight: 600; font-size: 2.2rem; margin: 0.6rem 0 0.2rem; }
+  .sim-headline { font-family: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic", sans-serif; font-weight: 600; font-size: 1.05rem; display: flex; align-items: center; gap: 0.5rem; }
+  .sim-big { font-family: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic", sans-serif; font-weight: 600; font-size: 2.2rem; margin: 0.6rem 0 0.2rem; }
   .sim-calc { font-size: 0.85rem; color: var(--ink-soft); }
   .sim-note { margin-top: 0.9rem; padding-top: 0.8rem; border-top: 1px dashed var(--line); font-size: 0.86rem; }
   .sim-note ul { margin: 0.3rem 0 0; padding-left: 1.1rem; }
@@ -209,10 +212,17 @@
   footer .inner p { max-width: none; }
   ::selection { background: var(--accent-soft); }
 
+  .print-only { display: none; }
   @media print {
-    nav.toc, .fav-star, .fav-print-btn, .picker, .doc-checklist input { display: none !important; }
     body { background: #fff; color: #000; }
-    section { break-inside: avoid; }
+    body > *:not(.print-only) { display: none !important; }
+    .print-only { display: block !important; max-width: none; padding: 1.5rem; }
+    .print-only h1 { font-size: 1.4rem; margin-bottom: 1.2rem; }
+    .print-card { break-inside: avoid; margin-bottom: 1.6rem; padding-bottom: 1.2rem; border-bottom: 1px solid #ccc; }
+    .print-card h2 { font-size: 1.05rem; margin-bottom: 0.3rem; }
+    .print-item { margin-top: 0.5rem; font-size: 0.85rem; }
+    .print-item .k { font-size: 0.68rem; text-transform: uppercase; color: #666; }
+    .print-note, .print-link { margin-top: 0.6rem; font-size: 0.8rem; color: #333; }
   }
 </style>
 </head>
@@ -259,7 +269,7 @@
   <div class="fav-panel-inner">
     <span class="fav-panel-label">☆ お気に入り</span>
     <div id="favChips" style="display:flex; flex-wrap:wrap; gap:0.5rem;"></div>
-    <button type="button" class="fav-print-btn" id="favPrintBtn" onclick="window.print()">印刷 / PDF保存</button>
+    <button type="button" class="fav-print-btn" id="favPrintBtn" onclick="printFavorites()">印刷 / PDF保存</button>
   </div>
 </div>
 
@@ -610,6 +620,33 @@
     }).join('');
   }
 
+  // お気に入りに保存した制度のみを印刷用領域に描画し、その部分だけを印刷範囲にする
+  var PRINT_ROWS = [
+    ['支給対象者', 'scale'], ['支給対象となる取り組み', 'expense'], ['助成率', 'rate'],
+    ['上限額', 'cap'], ['賃金上昇要件', 'wage'], ['受付期間', 'schedule'], ['制度の継続性', 'continuity']
+  ];
+  function printFavorites() {
+    var favs = getFavorites();
+    var area = document.getElementById('printFavArea');
+    if (!area) return;
+    if (favs.length === 0) {
+      area.innerHTML = '<h1>お気に入り制度一覧</h1><p>お気に入りに保存された制度がありません。</p>';
+    } else {
+      var cardsHTML = favs.map(function (key) {
+        var p = PROGRAMS[key];
+        if (!p) return '';
+        var itemsHTML = PRINT_ROWS.map(function (r) {
+          return '<div class="print-item"><div class="k">' + r[0] + '</div><div>' + p[r[1]] + '</div></div>';
+        }).join('');
+        return '<div class="print-card"><h2>' + p.name + '</h2>' + itemsHTML +
+          '<div class="print-note">' + p.note + '</div>' +
+          '<div class="print-link">公式サイト: ' + p.link + '</div></div>';
+      }).join('');
+      area.innerHTML = '<h1>お気に入り制度一覧</h1>' + cardsHTML;
+    }
+    window.print();
+  }
+
   // ---------- 制度一覧（02） ----------
   function renderProgramList() {
     var keys = Object.keys(PROGRAMS);
@@ -844,5 +881,8 @@
   renderFavPanel();
   updateFavoriteStars();
 </script>
+
+<div class="print-only" id="printFavArea"></div>
+
 </body>
 </html>
