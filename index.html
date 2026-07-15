@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>助成金ナビ — 雇用関係助成金ロードマップ</title>
+<meta name="description" content="事業規模・雇用予定などのチェックリストに答えるだけで、活用できる厚生労働省の雇用関係助成金がわかる診断サイト。">
+<style>
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic", sans-serif; }
+
+  :root {
+    --paper: #eef0ea;
+    --paper-raised: #f8f9f4;
+    --ink: #1b2420;
+    --ink-soft: #4a564d;
+    --ink-faint: #7c8880;
+    --accent: #a8752f;
+    --accent-soft: #e7d3ac;
+    --accent-wash: #f2e9d6;
+    --sage: #5f7360;
+    --sage-wash: #e2e8de;
+    --rust: #9c5539;
+    --rust-wash: #ecdcd2;
+    --line: #d5cfbf;
+    --shadow: rgba(27, 36, 32, 0.10);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #12181a;
+      --paper-raised: #182020;
+      --ink: #ece8e0;
+      --ink-soft: #b7bdb0;
+      --ink-faint: #838f83;
+      --accent: #dcab5c;
+      --accent-soft: #4d3c1f;
+      --accent-wash: #2b2313;
+      --sage: #93a88d;
+      --sage-wash: #202823;
+      --rust: #d1937a;
+      --rust-wash: #2c211d;
+      --line: #2c342e;
+      --shadow: rgba(0, 0, 0, 0.4);
+    }
+  }
+
+  body { background: var(--paper); color: var(--ink); line-height: 1.7; }
+  h1, h2, h3 { font-family: 'Fraunces', Georgia, serif; font-weight: 600; margin: 0; }
+  p { margin: 0.8rem 0 0; max-width: 68ch; color: var(--ink-soft); }
+  a { color: var(--accent); }
+  .jp-serif { font-family: 'Fraunces', Georgia, serif; }
+  .tabular { font-variant-numeric: tabular-nums; }
+
+  header.hero { background: var(--ink); color: var(--paper); padding: 3rem 1.5rem 2.4rem; }
+  header.hero .hero-inner { max-width: 880px; margin: 0 auto; }
+  .eyebrow { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--accent-soft); }
+  header.hero h1 { font-size: 2.1rem; line-height: 1.3; margin-top: 0.6rem; color: var(--paper); }
+  header.hero .lede { color: #cfd6cd; max-width: 60ch; }
+  .stat-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px,1fr)); gap: 1rem; margin-top: 1.6rem; }
+  .stat { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; padding: 0.9rem 1.1rem; }
+  .stat .k { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em; color: #a8b0a4; margin-bottom: 0.3rem; }
+  .stat .v { font-family: 'Fraunces', serif; font-weight: 600; font-size: 1.3rem; color: var(--paper); }
+  .stat .d { font-size: 0.76rem; color: #a8b0a4; margin-top: 0.2rem; }
+
+  nav.toc { position: sticky; top: 0; z-index: 10; background: var(--paper); border-bottom: 1px solid var(--line); }
+  nav.toc .row { max-width: 880px; margin: 0 auto; padding: 0.7rem 1.5rem; display: flex; gap: 1.2rem; flex-wrap: wrap; overflow-x: auto; }
+  nav.toc a { font-size: 0.82rem; color: var(--ink-soft); text-decoration: none; white-space: nowrap; }
+  nav.toc a:hover { color: var(--accent); }
+
+  .fav-panel { max-width: 880px; margin: 0 auto; padding: 0 1.5rem; display: none; }
+  .fav-panel.has-items { display: block; }
+  .fav-panel-inner { background: var(--paper-raised); border: 1px solid var(--line); border-radius: 8px; padding: 0.9rem 1.1rem; margin: 1rem 0 0; display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem 0.9rem; }
+  .fav-panel-label { font-size: 0.78rem; color: var(--ink-faint); font-weight: 600; }
+  .fav-chip { display: inline-flex; align-items: center; gap: 0.4rem; background: var(--accent-wash); color: var(--ink); border-radius: 100px; padding: 0.25rem 0.5rem 0.25rem 0.75rem; font-size: 0.82rem; }
+  .fav-chip button { appearance: none; border: none; background: none; color: var(--ink-faint); cursor: pointer; font-size: 0.85rem; line-height: 1; padding: 0.1rem; }
+  .fav-chip button:hover { color: var(--rust); }
+  .fav-print-btn { appearance: none; border: 1px solid var(--accent); background: var(--paper); color: var(--accent); border-radius: 6px; padding: 0.4rem 0.8rem; font-size: 0.82rem; cursor: pointer; margin-left: auto; }
+  .fav-print-btn:hover { background: var(--accent-wash); }
+  .fav-star { appearance: none; -webkit-appearance: none; border: 1px solid var(--line); background: var(--paper); color: var(--ink-faint); border-radius: 100px; width: 2rem; height: 2rem; flex-shrink: 0; font-size: 1rem; line-height: 1; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; margin-left: auto; }
+  .fav-star:hover, .fav-star:focus-visible { border-color: var(--accent); color: var(--accent); outline: none; }
+  .fav-star.active { background: var(--accent-wash); border-color: var(--accent); color: var(--accent); }
+
+  main { max-width: 880px; margin: 0 auto; padding: 0 1.5rem; }
+  section { padding: 2.6rem 0; border-bottom: 1px solid var(--line); }
+  section:last-of-type { border-bottom: none; }
+  .section-head { display: flex; align-items: baseline; gap: 0.8rem; margin-bottom: 0.4rem; }
+  .section-no { color: var(--accent); font-size: 1.1rem; }
+  .section-sub { color: var(--ink-soft); }
+
+  .badge-no-review { display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.74rem; font-weight: 600; color: var(--sage); background: var(--sage-wash); border-radius: 100px; padding: 0.15rem 0.6rem; }
+
+  /* ---------- Diagnosis (01) ---------- */
+  .picker { background: var(--paper-raised); border: 1px solid var(--line); border-radius: 8px; padding: 1.2rem 1.3rem 1.4rem; margin-top: 1.2rem; }
+  .picker label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.07em; color: var(--ink-faint); display: block; margin-bottom: 0.55rem; }
+  .picker select {
+    width: 100%; font: inherit; font-size: 0.98rem; padding: 0.7rem 2.4rem 0.7rem 0.9rem;
+    border: 1px solid var(--line); border-radius: 6px;
+    background: var(--paper) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M5 7l5 6 5-6" fill="none" stroke="%23887d63" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>') no-repeat right 0.8rem center;
+    background-size: 1rem; color: var(--ink); appearance: none; -webkit-appearance: none; cursor: pointer;
+  }
+  .picker select:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .cat-check-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; margin-top: 0.6rem; }
+  @media (max-width: 640px) { .cat-check-grid { grid-template-columns: 1fr; } }
+  .cat-check { display: flex; align-items: center; gap: 0.6rem; padding: 0.6rem 0.8rem; border: 1px solid var(--line); border-radius: 6px; background: var(--paper); font-size: 0.88rem; cursor: pointer; }
+  .cat-check:has(input:checked) { border-color: var(--accent); background: var(--accent-wash); }
+  .cat-check input { accent-color: var(--accent); width: 1rem; height: 1rem; flex-shrink: 0; }
+  .diag-result { margin-top: 1.4rem; }
+  .diag-hint { font-size: 0.85rem; color: var(--ink-faint); padding: 0.9rem 1rem; border: 1px dashed var(--line); border-radius: 6px; }
+
+  /* ---------- Program cards (02) ---------- */
+  .cond-list { display: flex; flex-direction: column; gap: 1rem; margin-top: 1.2rem; }
+  .cond-card { background: var(--paper-raised); border: 1px solid var(--line); border-radius: 8px; padding: 1.3rem 1.4rem; box-shadow: 0 1px 2px var(--shadow); }
+  .cond-card.dim { opacity: 0.4; }
+  .cond-head { display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem 1rem; padding-bottom: 0.9rem; margin-bottom: 0.2rem; border-bottom: 1px dashed var(--line); }
+  .cond-head .stack { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 0.2rem; }
+  .stack .sub { font-size: 0.76rem; color: var(--ink-faint); font-weight: 400; }
+  .pill { display: inline-block; font-size: 0.86rem; font-weight: 600; }
+  a.src-link { display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.78rem; color: var(--accent); text-decoration: none; border-bottom: 1px solid var(--accent-soft); margin-top: 0.35rem; }
+  a.src-link:hover, a.src-link:focus-visible { border-bottom-color: var(--accent); }
+  .pd-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap: 1rem 1.6rem; margin-top: 1rem; }
+  .pd-item .k { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-faint); margin-bottom: 0.3rem; }
+  .pd-item .v { font-size: 0.92rem; line-height: 1.6; }
+  .pd-item-wide { grid-column: 1 / -1; }
+  .pd-note { margin-top: 1rem; font-size: 0.84rem; color: var(--ink-soft); background: var(--sage-wash); border-radius: 6px; padding: 0.7rem 0.9rem; }
+  .match-tag { display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.74rem; font-weight: 600; color: var(--accent); background: var(--accent-wash); border-radius: 100px; padding: 0.15rem 0.6rem; margin-left: 0.4rem; }
+
+  /* ---------- Comparison table (03) ---------- */
+  .compare-table-wrap { overflow-x: auto; margin-top: 1.2rem; }
+  table.compare-table { width: 100%; border-collapse: collapse; font-size: 0.86rem; min-width: 640px; }
+  table.compare-table th, table.compare-table td { text-align: left; padding: 0.7rem 0.9rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+  table.compare-table thead th { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-faint); border-bottom: 2px solid var(--line); white-space: nowrap; }
+  table.compare-table tbody th { font-weight: 600; white-space: nowrap; }
+  table.compare-table tbody tr:last-child td, table.compare-table tbody tr:last-child th { border-bottom: none; }
+
+  /* ---------- Simulator (04) ---------- */
+  .sim-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.1rem; }
+  @media (max-width: 640px) { .sim-grid { grid-template-columns: 1fr; } }
+  .sim-result { margin-top: 1.3rem; }
+  .sim-panel { border-radius: 8px; padding: 1.2rem 1.3rem; }
+  .sim-panel.ok { background: var(--sage-wash); border: 1px solid var(--sage); }
+  .sim-panel.alert { background: var(--rust-wash); border: 1px solid var(--rust); }
+  .sim-headline { font-family: 'Fraunces', serif; font-weight: 600; font-size: 1.05rem; display: flex; align-items: center; gap: 0.5rem; }
+  .sim-big { font-family: 'Fraunces', serif; font-weight: 600; font-size: 2.2rem; margin: 0.6rem 0 0.2rem; }
+  .sim-calc { font-size: 0.85rem; color: var(--ink-soft); }
+  .sim-note { margin-top: 0.9rem; padding-top: 0.8rem; border-top: 1px dashed var(--line); font-size: 0.86rem; }
+  .sim-note ul { margin: 0.3rem 0 0; padding-left: 1.1rem; }
+  .sim-note li { margin-bottom: 0.3rem; }
+  .sim-panel.advice { background: var(--paper-raised); border: 1px solid var(--line); border-left: 4px solid var(--accent); margin-top: 0.8rem; }
+  .sim-panel.advice .sim-headline { color: var(--accent); }
+  .sim-panel.checklist { background: var(--paper-raised); border: 1px solid var(--line); border-left: 4px solid var(--sage); margin-top: 0.8rem; }
+  .sim-panel.checklist .sim-headline { color: var(--sage); }
+  .advice-disclaimer { font-size: 0.76rem; color: var(--ink-faint); margin-top: 0.7rem; padding-top: 0.6rem; border-top: 1px dashed var(--line); }
+  .item-list { margin: 0.6rem 0 0; padding: 0; list-style: none; counter-reset: item; }
+  .item-list li { counter-increment: item; padding: 0.4rem 0 0.4rem 1.8rem; position: relative; font-size: 0.89rem; border-bottom: 1px dashed var(--line); }
+  .item-list li:last-child { border-bottom: none; }
+  .item-list li::before { content: counter(item); position: absolute; left: 0; top: 0.4rem; width: 1.3rem; height: 1.3rem; border-radius: 50%; background: var(--accent-wash); color: var(--accent); font-size: 0.72rem; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+
+  /* ---------- Checklist ---------- */
+  .doc-checklist { margin-top: 0.8rem; }
+  .doc-checklist label { display: flex; align-items: flex-start; gap: 0.6rem; padding: 0.4rem 0; font-size: 0.87rem; cursor: pointer; }
+  .doc-checklist input { accent-color: var(--accent); width: 1rem; height: 1rem; margin-top: 0.2rem; flex-shrink: 0; }
+  .doc-checklist label:has(input:checked) span { color: var(--ink-faint); text-decoration: line-through; }
+
+  /* ---------- FAQ (05) ---------- */
+  .faq-list { display: flex; flex-direction: column; gap: 0.7rem; margin-top: 1.2rem; }
+  details.faq-card { background: var(--paper-raised); border: 1px solid var(--line); border-radius: 8px; }
+  details.faq-card > summary { list-style: none; cursor: pointer; padding: 1rem 1.2rem; font-weight: 600; font-size: 0.94rem; display: flex; align-items: center; gap: 0.8rem; }
+  details.faq-card > summary::-webkit-details-marker { display: none; }
+  details.faq-card > summary::marker { content: ""; }
+  details.faq-card .chevron { margin-left: auto; color: var(--ink-faint); font-size: 0.8rem; transition: transform 0.15s ease; }
+  details[open] .chevron { transform: rotate(90deg); }
+  .faq-body { padding: 0 1.2rem 1.1rem; font-size: 0.88rem; line-height: 1.75; color: var(--ink-soft); border-top: 1px solid var(--line); margin-top: 0.1rem; padding-top: 0.9rem; }
+
+  footer { border-top: 1px solid var(--line); padding: 2rem 1.5rem 3rem; }
+  footer .inner { max-width: 880px; margin: 0 auto; color: var(--ink-faint); font-size: 0.82rem; }
+  footer .inner p { max-width: none; }
+  ::selection { background: var(--accent-soft); }
+
+  @media print {
+    nav.toc, .fav-star, .fav-print-btn, .picker, .doc-checklist input { display: none !important; }
+    body { background: #fff; color: #000; }
+    section { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="hero-inner">
+    <div class="eyebrow">Subsidy &amp; Grant Roadmap — 助成金専用</div>
+    <h1>助成金ナビ<br>雇用関係助成金ロードマップ</h1>
+    <p class="lede">事業規模・雇用予定などのチェックリストに答えるだけで、活用できる厚生労働省の雇用関係助成金がわかる。「助成金」（審査による競争選抜がなく、要件を満たせば原則支給される制度）だけを厳選して掲載し、公募型の「補助金」は扱わない。</p>
+    <div class="stat-row">
+      <div class="stat">
+        <div class="k">掲載制度数</div>
+        <div class="v tabular"><span id="heroProgramCount">0</span><small> 制度</small></div>
+        <div class="d">すべて審査選抜のない要件充足型</div>
+      </div>
+      <div class="stat">
+        <div class="k">対象</div>
+        <div class="v" style="font-size:1.3rem;">業種を問わず</div>
+        <div class="d">雇用関係助成金は業種横断で適用</div>
+      </div>
+      <div class="stat">
+        <div class="k">診断</div>
+        <div class="v" style="font-size:1.3rem;">約1分</div>
+        <div class="d">チェックリストに答えるだけ</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<nav class="toc">
+  <div class="row">
+    <a href="#about">助成金とは</a>
+    <a href="#diagnosis">診断</a>
+    <a href="#programs">制度一覧</a>
+    <a href="#compare">制度比較表</a>
+    <a href="#simulator">概算シミュレーター</a>
+    <a href="#faq">よくある質問</a>
+    <a href="#notes">留意事項</a>
+  </div>
+</nav>
+
+<div class="fav-panel" id="favPanel">
+  <div class="fav-panel-inner">
+    <span class="fav-panel-label">☆ 保存した制度</span>
+    <div id="favChips" style="display:flex; flex-wrap:wrap; gap:0.5rem;"></div>
+    <button type="button" class="fav-print-btn" onclick="window.print()">印刷 / PDF保存</button>
+  </div>
+</div>
+
+<main>
+
+  <section id="about">
+    <div class="section-head"><span class="section-no jp-serif">00</span><h2>助成金とは</h2></div>
+    <p class="section-sub">「助成金」は、厚生労働省が主に雇用・労働分野で実施する制度で、<strong>審査による競争選抜がなく、要件を満たせば原則として支給される</strong>点が「補助金」（予算上限のある競争審査型）と異なる。本サイトでは厳選した助成金のみを掲載し、公募が終了・廃止された制度は掲載しない。内容は<span id="asOfDate">2026年7月</span>時点で公開されている情報に基づく。</p>
+  </section>
+
+  <section id="diagnosis">
+    <div class="section-head"><span class="section-no jp-serif">01</span><h2>診断</h2></div>
+    <p class="section-sub">当てはまる取り組み・予定をチェックすると、活用できる可能性がある助成金が絞り込まれる。</p>
+    <div class="picker">
+      <label for="diagEmployees">常時使用する従業員数</label>
+      <select id="diagEmployees" onchange="runDiagnosis()">
+        <option value="t20">20人以下</option>
+        <option value="t50">21〜50人</option>
+        <option value="t100">51〜100人</option>
+        <option value="t300">101〜300人</option>
+        <option value="t301">301人以上</option>
+      </select>
+      <div style="margin-top:1.1rem;">
+        <label>当てはまるものをすべて選択（複数選択可）</label>
+        <div class="cat-check-grid" id="diagCheckGrid"></div>
+      </div>
+    </div>
+    <div class="diag-result" id="diagResult"></div>
+  </section>
+
+  <section id="programs">
+    <div class="section-head"><span class="section-no jp-serif">02</span><h2>制度一覧</h2></div>
+    <p class="section-sub">掲載中の助成金<span id="programCountInline">0</span>件。いずれも<span class="badge-no-review">審査なし・要件充足型</span>で、要件を満たせば原則支給される。</p>
+    <div class="cond-list" id="programList"></div>
+  </section>
+
+  <section id="compare">
+    <div class="section-head"><span class="section-no jp-serif">03</span><h2>制度比較表</h2></div>
+    <p class="section-sub">気になる制度を2〜4件選ぶと、対象・助成率・上限額・受付期間・公式リンクを横並びで比較できる。</p>
+    <div class="picker">
+      <label>比較する制度を選択（2〜4件）</label>
+      <div class="cat-check-grid" id="compareCheckGrid"></div>
+    </div>
+    <div class="compare-table-wrap" id="compareTableWrap"></div>
+  </section>
+
+  <section id="simulator">
+    <div class="section-head"><span class="section-no jp-serif">04</span><h2>概算シミュレーター</h2></div>
+    <p class="section-sub">使いたい制度・対象人数・従業員規模を選ぶと、見込める概算受給額とAIアドバイス・申請準備チェックリストを表示する。</p>
+    <div class="picker">
+      <div class="sim-grid">
+        <div>
+          <label for="simProgram">① 使いたい制度</label>
+          <select id="simProgram" onchange="runSimulation()"></select>
+        </div>
+        <div>
+          <label for="simCount">② 対象人数</label>
+          <select id="simCount" onchange="runSimulation()">
+            <option value="1">1人</option>
+            <option value="2">2人</option>
+            <option value="3">3人</option>
+            <option value="5">5人</option>
+            <option value="10">10人</option>
+          </select>
+        </div>
+      </div>
+      <div class="sim-result" id="simResult"></div>
+    </div>
+  </section>
+
+  <section id="faq">
+    <div class="section-head"><span class="section-no jp-serif">05</span><h2>よくある質問・用語集</h2></div>
+    <p class="section-sub">助成金の活用にあたって、よく疑問に挙がる基礎知識をまとめた。</p>
+    <div class="faq-list" id="faqList"></div>
+  </section>
+
+  <section id="notes">
+    <div class="section-head"><span class="section-no jp-serif">06</span><h2>留意事項</h2></div>
+    <p>助成金の活用にあたっては、以下の点に留意すること。</p>
+    <ul class="item-list" style="max-width:68ch;">
+      <li>助成金は原則として取り組みの<strong>「計画届」を事前に提出してから実施する</strong>制度が多い。事後申請では支給対象外になる場合がある</li>
+      <li>労働保険料の未納がある場合や、直近の重大な労働関係法令違反がある場合は支給対象外となることがある</li>
+      <li>同一の取り組みに対して複数の助成金を重複して受給することはできない場合がある。制度ごとの併給調整規定を必ず確認すること</li>
+      <li>本資料の金額・条件は概算であり、実際の支給可否・支給額は審査（要件確認）の結果により変動する</li>
+      <li>制度は年度ごとに要件・金額が改定されることがあるため、申請前に必ず公式サイト・パンフレットで最新情報を確認すること</li>
+    </ul>
+  </section>
+
+</main>
+
+<footer>
+  <div class="inner">
+    <p>掲載の制度概要・金額は公開されている公式情報に基づく試算であり、将来の制度内容を保証するものではない。制度が終了・改廃された場合は随時掲載から除外する。実際の申請にあたっては必ず各制度の公式サイト・パンフレットで最新の要件を確認すること。</p>
+  </div>
+</footer>
+
+<script>
+  // 掲載10制度。いずれも審査による競争選抜のない要件充足型の「助成金」のみ（補助金は対象外）。
+  // 2026年7月時点の厚生労働省公式情報に基づく。金額の一部区分は公式パンフレット原本の詳細表を要確認としている。
+  var PROGRAMS = {
+    trial: {
+      name: "トライアル雇用助成金（一般トライアルコース）",
+      category: "採用・試行雇用",
+      scale: "雇用保険適用事業所の事業主（全業種対象）",
+      expense: "職業経験不足等により就職が困難な求職者を、ハローワーク等の紹介により原則3か月間、無期雇用を前提に試行的に雇用する取り組み",
+      rate: "定額支給（助成率の概念なし）",
+      cap: "月額4万円×最大3か月＝12万円（母子家庭の母・父子家庭の父等は月額5万円×3か月＝15万円）",
+      wage: "不要（賃金上昇要件の明記なし）",
+      schedule: "通年随時受付（ハローワーク等の紹介日を起点に開始。公募回・締切なし）",
+      continuity: "恒久的に実施中の制度。終了予定の記載なし",
+      note: "ハローワーク・職業紹介事業者等の紹介を経ずに直接雇用した場合は対象外。",
+      link: "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/koyou/kyufukin/trial_koyou.html",
+      linkLabel: "厚生労働省 公式ページを見る",
+      matchesWhen: ["trialHire", "newHireDifficult"],
+      unitAmount: 120000,
+      unitAmountNote: "対象者1人・3か月分の目安（母子家庭の母等は月5万円×3か月＝15万円）"
+    },
+    tokutei: {
+      name: "特定求職者雇用開発助成金（特定就職困難者コース）",
+      category: "採用・就職困難者雇用",
+      scale: "雇用保険適用事業所の事業主（全業種対象。中小企業とそれ以外で支給額が異なる）",
+      expense: "高年齢者（60歳以上）、障害者、母子家庭の母等、就職が特に困難な方をハローワーク等の紹介により継続雇用する取り組み",
+      rate: "定額支給（対象者区分ごとの定額）",
+      cap: "重度障害者等（中小企業）240万円、身体・知的障害者（中小企業）120万円、高年齢者・母子家庭の母等（中小企業）60万円など、対象区分・企業規模により変動（1〜3年に分割支給）。詳細は公式パンフレットの区分表を確認",
+      wage: "必須要件ではない（賃上げ関連の加算メニューが別途存在する可能性あり、要確認）",
+      schedule: "通年随時受付（ハローワーク等の紹介日を起点に開始。公募回・締切なし）",
+      continuity: "恒久的に実施中。2026年4月より賃金台帳提出が全申請で必須化されるなど要件の見直しが継続している",
+      note: "ハローワーク等の紹介が必須。有期雇用の場合は自動更新条項のある雇用契約のみ対象。賃金台帳未提出は不支給となる。",
+      link: "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/koyou/kyufukin/tokutei_konnan.html",
+      linkLabel: "厚生労働省 公式ページを見る",
+      matchesWhen: ["newHireDifficult", "seniorEmployment", "disabilityEmployment"]
+    },
+    ryoritsu: {
+      name: "両立支援等助成金（育児休業等支援コース）",
+      category: "仕事と家庭の両立",
+      scale: "中小企業事業主のみが対象（大企業は対象外）",
+      expense: "「育休復帰支援プラン」を作成し、対象労働者の育児休業取得・職場復帰を計画的に支援する取り組み",
+      rate: "定額支給",
+      cap: "育休取得時30万円＋職場復帰時30万円＝労働者1人あたり最大62万円（育児休業取得状況の公表加算2万円は事業主1回限り）。有期・無期雇用労働者それぞれ1名まで対象になり得る",
+      wage: "不要（本コースに賃金上昇要件の明記なし）",
+      schedule: "通年随時受付。育休取得時：育休開始から3か月経過日の翌日から2か月以内に申請。職場復帰時：育休終了から6か月経過日の翌日から2か月以内に申請",
+      continuity: "恒久的制度として実施中。2026年度に拡充改正が行われている",
+      note: "育休復帰支援プランの事前作成・実施が必須。職場復帰時の助成は同一労働者・同一育休についての育休取得時助成の受給が前提条件。厚労省の案内ページでは「子ども・子育て両立支援等助成金」の名称も使われているが、公式の支給申請の手引きでは「両立支援等助成金」の名称が用いられている。",
+      link: "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kodomo/shokuba_kosodate/ryouritsu01/index.html",
+      linkLabel: "厚生労働省 公式ページを見る",
+      matchesWhen: ["workLifeBalance"],
+      unitAmount: 600000,
+      unitAmountNote: "育休取得時30万円＋職場復帰時30万円（同一労働者・同一育休が前提）"
+    },
+    shusshoji: {
+      name: "両立支援等助成金（出生時両立支援コース）",
+      category: "仕事と家庭の両立（男性育休）",
+      scale: "第1種は中小企業事業主限定。第2種は「特定事業主」（資本金・出資額が小売・サービス業5,000万円以下、卸売業1億円以下、その他業種3億円以下、または常時雇用労働者数300人以下のいずれかを満たす事業主）が対象",
+      expense: "育児・介護休業法上の雇用環境整備措置（研修実施・相談体制整備・取得事例の収集提供・制度周知等）を複数実施したうえで、子の出生後8週間以内に男性労働者へ一定日数以上の育児休業（産後パパ育休含む）を取得させる、または男性の育休取得率を前年度比30ポイント以上上昇させる取り組み",
+      rate: "定率助成ではなく、要件達成ごとの定額支給",
+      cap: "第1種：1人目20万円（雇用環境整備措置4つ以上実施で30万円）／2人目10万円／3人目10万円。第2種：60万円（1事業主1回限り。プラチナくるみん認定事業主は+15万円で75万円）。情報公表加算：2万円（1事業主1回限り）",
+      wage: "不要（賃金上昇要件なし）",
+      schedule: "通年随時受付。第1種は対象育休終了日の翌日から起算2か月以内、第2種は要件充足事業年度の翌事業年度開始日から起算6か月以内に申請",
+      continuity: "2016年4月開始の雇用安定事業。時限措置ではなく継続中。直近改正は2026年4月8日",
+      note: "就業規則・労使協定への育児休業（出生時育児休業含む）・短時間勤務制度の規定が必須。次世代育成支援対策推進法に基づく一般事業主行動計画の策定・届出・公表・周知が必要（プラチナくるみん認定事業主は除く）。第2種の要件を満たす事業年度中は第1種の申請不可。",
+      link: "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kodomo/shokuba_kosodate/ryouritsu01/index.html",
+      linkLabel: "厚生労働省 公式ページを見る",
+      matchesWhen: ["paternityLeave", "workLifeBalance"],
+      unitAmount: 200000,
+      unitAmountNote: "第1種・1人目の基本額目安（雇用環境整備措置4つ以上実施で30万円、2人目・3人目は各10万円。第2種は別途60万円〜75万円）"
+    },
+    senior65: {
+      name: "65歳超雇用推進助成金（65歳超継続雇用促進コース）",
+      category: "高年齢者雇用",
+      scale: "雇用保険適用事業所の事業主（中小企業・大企業を問わず対象。被保険者数区分により支給額が変動）",
+      expense: "65歳以上への定年引上げ、定年廃止、66歳以上の継続雇用制度導入等のいずれかを実施し、高年齢者雇用推進者の選任等の雇用管理改善措置もあわせて行う取り組み",
+      rate: "定率の助成率は設定なし。対象被保険者数・実施措置に応じた定額支給",
+      cap: "15万円〜240万円（被保険者数区分「1〜3人」「4〜6人」「7〜9人」「10人以上」と、引上げ幅・措置内容により変動）。2026年4月改正で増額され、支給回数制限も撤廃された",
+      wage: "不要（賃金上昇要件なし）",
+      schedule: "通年随時受付。措置の実施日の翌月から起算して4か月以内の各月初日〜15日までに申請",
+      continuity: "恒久的な雇用関係助成金メニューの一つ。毎年度の予算措置で内容が改定されるため、次年度以降の要件は要継続確認",
+      note: "就業規則等の改定・届出が必須。雇用管理整備の実施計画の事前提出が必要。2026年度改正で支給額・支給回数制限が変更されたため、旧年度情報との混同に注意。",
+      link: "https://www.mhlw.go.jp/stf/newpage_52738.html",
+      linkLabel: "厚生労働省 公式ページを見る",
+      matchesWhen: ["seniorEmployment"]
+    },
+    career_disability: {
+      name: "キャリアアップ助成金（障害者正社員化コース）",
+      category: "障害者雇用",
+      scale: "雇用保険適用事業所の事業主（中小企業・大企業とも対象。中小企業の方が支給額が高い）",
+      expense: "有期雇用の障害者を正規雇用・無期雇用へ転換、または無期雇用の障害者を正規雇用へ転換する取り組み",
+      rate: "定率の助成率は設定なし。対象者1人あたりの定額支給",
+      cap: "重度身体・知的・精神障害者等（中小企業）：有期→正規120万円、有期→無期・無期→正規は各60万円。その他の障害者（中小企業）：有期→正規90万円、有期→無期・無期→正規は各45万円（大企業はいずれも減額）",
+      wage: "数値基準の明記なし（転換後の待遇が転換前を下回らないことなどの要件がある可能性が高く、要確認）",
+      schedule: "通年随時受付。支給対象期間は転換後1年間で、第1期・第2期（各6か月）に分けて申請",
+      continuity: "恒久的な雇用関係助成金メニュー。旧・障害者雇用安定助成金（職場定着支援コースの一部）は2021年度に廃止され、正規雇用・無期雇用転換の支援は本コースへ統合された",
+      note: "申請前にキャリアアップ計画の作成・提出が必須。「障害者雇用安定助成金」の名称で検索すると廃止情報がヒットするため、現行名称「キャリアアップ助成金（障害者正社員化コース）」で確認すること。",
+      link: "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/koyou/shougaishakoyou/index_00004.html",
+      linkLabel: "厚生労働省 公式ページを見る",
+      matchesWhen: ["disabilityEmployment", "regularize"],
+      unitAmount: 900000,
+      unitAmountNote: "中小企業・重度以外の障害者を有期→正規雇用に転換した場合の1人あたり目安（区分により45万円〜120万円まで変動）"
+    },
+    jinzai_kakuho: {
+      name: "人材確保等支援助成金（雇用管理制度・雇用環境整備助成コース）",
+      category: "人材確保・職場環境",
+      scale: "雇用保険適用事業所の事業主（規模区分により支給額が異なる）",
+      expense: "賃金規定・諸手当・人事評価制度・職場活性化・健康づくり制度のいずれかの導入、または業務負担軽減機器等の導入により、離職率の低下に取り組むこと",
+      rate: "雇用管理制度の導入は定額助成。業務負担軽減機器等の導入は対象経費の1/2（賃金要件達成時62.5〜75/100）",
+      cap: "雇用管理制度は1制度20万〜40万円（複数導入時上限80万円、賃金要件達成で最大100万円）。業務負担軽減機器等は上限150万円（賃金要件達成で最大225万円）",
+      wage: "任意（賃金3％・5％・7％以上の引上げ達成で加算あり）",
+      schedule: "通年随時受付（雇用管理制度等整備計画の認定→実施→離職率低下確認という流れ。公募回・締切なし）",
+      continuity: "恒久的な雇用関係助成金の一つとして継続中。2026年4月付で支給要領が改訂され現行版が最新",
+      note: "離職率を計画提出前1年間比で1ポイント以上低下（9人以下事業所は上回らないことが条件）させる必要がある。雇用管理制度等整備計画の事前認定が必須で、認定なしに実施した取り組みは対象外。",
+      link: "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000199292_00005.html",
+      linkLabel: "厚生労働省 公式ページを見る",
+      matchesWhen: ["recruitmentSupport"]
+    },
+    chiiki: {
+      name: "地域雇用開発助成金（地域雇用開発コース）",
+      category: "地域雇用",
+      scale: "雇用保険適用事業所の事業主（中小企業事業主は支給額が優遇される）",
+      expense: "同意雇用開発促進地域・過疎等雇用改善地域等で事業所の設置・整備を行い、あわせて地域居住の求職者等をハローワーク紹介で新規雇用する取り組み",
+      rate: "定額方式（設置整備費用区分×対象労働者増加人数区分の組み合わせによる）",
+      cap: "50万円〜800万円（設置整備費用300万円以上1,000万円未満・対象労働者3〜4人増で50万円〜、5,000万円以上・20人以上増で800万円など。年1回・最大3年間支給。中小企業は1回目1.5倍、創業は2倍）。詳細な全区分は公式パンフレットの原本を要確認",
+      wage: "明示的な賃金上昇要件は確認できず（不要の可能性が高いが要確認）",
+      schedule: "計画書を管轄労働局へ事前提出し受理される必要あり。労働局ごとに受付期間が設定される（通年ではなく期別受付）",
+      continuity: "継続実施中の恒久的助成金。対象地域（同意雇用開発促進地域等）は定期的に見直され、2025年10月時点で15道県29地域が指定されている",
+      note: "対象地域の指定は固定ではないため、事業所設置予定地が最新の指定地域に該当するか事前確認が必須。設置整備費用は消費税込みで300万円以上が必須。雇用は常時雇用の一般被保険者等として3人（創業の場合2人）以上。",
+      link: "https://www.mhlw.go.jp/seisakunitsuite/bunya/koyou_roudou/koyou/kyufukin/chiiki_koyou.html",
+      linkLabel: "厚生労働省 公式ページを見る",
+      matchesWhen: ["regionalArea"]
+    },
+    kaizen: {
+      name: "業務改善助成金",
+      category: "賃上げ・処遇改善",
+      scale: "中小企業・小規模事業者で、事業場内最低賃金が地域別最低賃金を下回る事業場（従業員規模を問わず対象）",
+      expense: "生産性向上に資する設備・機器の導入費全般",
+      rate: "3/4〜4/5",
+      cap: "450万円（特例600万円）。50円／70円／90円の3コースがあり、コースと引き上げ人数に応じて上限額が変動",
+      wage: "必須（事業場内最低賃金の50円以上の引き上げが前提条件）",
+      schedule: "2026年9月1日開始／締切は最低賃金発効日前日か11月30日の早い方",
+      continuity: "毎年度実施。2027年度以降も継続見込み",
+      note: "交付申請書・賃金引上げ計画書の提出が必要。設備導入等の見積書も必須。",
+      link: "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/roudoukijun/zigyonushi/shienjigyou/03.html",
+      linkLabel: "厚生労働省 公式ページを見る",
+      matchesWhen: ["wageUp"]
+    },
+    career: {
+      name: "キャリアアップ助成金（正社員化コース）",
+      category: "正社員化・処遇改善",
+      scale: "有期雇用労働者等を正社員化する事業主。事業所あたり年20名まで（企業規模を問わず対象だが、中小企業か大企業かで支給額が異なる）",
+      expense: "正社員転換に伴う人件費相当（設備投資ではない）",
+      rate: "定額支給",
+      cap: "140万円／人（加算込。中小企業向け金額。大企業はより低額）",
+      wage: "必須（転換後に賃金3％以上の引上げが要件）",
+      schedule: "通年受付（公募型ではなく随時支給。事前のキャリアアップ計画届出が必要）",
+      continuity: "恒久的な制度として毎年度実施。次年度も継続見込み",
+      note: "キャリアアップ計画書の事前提出が必須。転換前後の雇用契約書・賃金台帳の整備が必要。",
+      link: "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/part_haken/jigyounushi/career.html",
+      linkLabel: "厚生労働省 公式ページを見る",
+      matchesWhen: ["regularize", "wageUp"],
+      unitAmount: 1400000,
+      unitAmountNote: "中小企業・有期雇用から正社員へ転換した場合の1人あたり目安（加算込）"
+    },
+    jinzai: {
+      name: "人材開発支援助成金（人材育成支援コース）",
+      category: "人材育成",
+      scale: "労働者に10時間以上の訓練を実施する事業主（企業規模を問わず対象だが、中小企業は助成率が優遇される）",
+      expense: "研修・訓練費用、訓練期間中の賃金",
+      rate: "経費助成45%＋賃金助成（大企業は経費助成30%）",
+      cap: "年間1,000万円",
+      wage: "基本不要（一部コースで賃金要件充足時に助成単価上乗せ）",
+      schedule: "通年受付（公募型ではなく随時支給）",
+      continuity: "恒久的な制度として毎年度実施。次年度も継続見込み",
+      note: "事業内職業能力開発計画・年間職業能力開発計画届の事前提出が必要。訓練実施計画届・訓練カリキュラムの整備も必須。",
+      link: "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/koyou/kyufukin/d01-1.html",
+      linkLabel: "厚生労働省 公式ページを見る",
+      matchesWhen: ["training"]
+    }
+  };
+
+  var DIAGNOSIS_QUESTIONS = [
+    { key: "newHireDifficult", label: "就職が難しい方（高齢者・障害者・ひとり親等）を新たに雇用する予定がある" },
+    { key: "trialHire", label: "ハローワーク等の紹介で求職者を試行的に雇用（トライアル雇用）する予定がある" },
+    { key: "regularize", label: "有期雇用・パート等の従業員を正社員化する予定がある" },
+    { key: "training", label: "従業員向けの研修・訓練を実施する予定がある" },
+    { key: "wageUp", label: "賃金の引き上げを検討している" },
+    { key: "workLifeBalance", label: "育児休業の取得・職場復帰を計画的に支援する予定がある" },
+    { key: "paternityLeave", label: "男性労働者が育児休業を取得しやすい職場づくり（研修・相談体制整備等）に取り組む予定がある" },
+    { key: "seniorEmployment", label: "65歳以上の高年齢者の雇用継続・拡大に取り組む予定がある" },
+    { key: "disabilityEmployment", label: "障害者の雇用・正社員転換に取り組む予定がある" },
+    { key: "recruitmentSupport", label: "賃金規定・人事評価制度等の整備や離職率の低下に取り組む予定がある" },
+    { key: "regionalArea", label: "雇用機会が少ない地域（過疎地域等）で事業所の新設・整備を予定している" }
+  ];
+
+  // 一般的に必要となる書類の目安。制度・年度により変わるため、申請前に必ず最新の公式情報で確認すること
+  var PROGRAM_REQUIRED_DOCS = {
+    trial: ["職業紹介状（ハローワーク等の紹介を証明する書類）", "試行雇用実施計画書", "雇用契約書（無期雇用を前提とする内容）", "出勤簿・賃金台帳", "支給申請書"],
+    tokutei: ["職業紹介状（ハローワーク等の紹介を証明する書類）", "対象者の状況を確認できる書類（年齢・障害者手帳等）", "雇用契約書", "出勤簿・賃金台帳", "支給申請書"],
+    ryoritsu: ["育休復帰支援プラン", "育児休業取得を証明する書類（辞令等）", "育休復帰後の雇用契約書・出勤簿", "育児休業取得状況の公表を確認できる書類（加算を受ける場合）", "支給申請書"],
+    shusshoji: ["一般事業主行動計画の策定・届出・公表を確認できる書類（プラチナくるみん認定事業主を除く）", "雇用環境整備措置の実施を確認できる書類（研修記録・相談体制整備等）", "対象労働者の育児休業取得を証明する書類（辞令・休業申出書等）", "就業規則・労使協定（育児休業・短時間勤務制度の規定）", "支給申請書"],
+    senior65: ["高年齢者雇用推進者選任を証明する書類", "改定後の就業規則（定年引上げ・継続雇用制度等）", "雇用管理整備の実施計画書", "対象労働者の雇用契約書・賃金台帳", "支給申請書"],
+    career_disability: ["キャリアアップ計画書（事前提出必須）", "障害者手帳の写し等、対象者の状況を確認できる書類", "転換前後の雇用契約書・賃金台帳", "支給申請書（第1期・第2期）", "出勤簿・タイムカード"],
+    jinzai_kakuho: ["雇用管理制度等整備計画書（事前認定必須）", "導入した制度の規程（賃金規定・人事評価制度等）", "離職率算定に必要な労働者名簿", "制度導入・実施を確認できる書類", "支給申請書"],
+    chiiki: ["地域雇用開発計画書（事前提出・受理必須）", "事業所設置・整備に係る契約書・領収書", "対象労働者の雇用契約書（ハローワーク紹介）", "対象地域の指定を確認できる書類", "支給申請書"],
+    kaizen: ["交付申請書", "賃金引上げ計画書", "労働者名簿・賃金台帳", "就業規則または労働条件通知書の写し", "設備導入等に係る見積書", "事業場内最低賃金を確認できる書類"],
+    career: ["キャリアアップ計画書（事前提出必須）", "就業規則または労働協約", "転換前後の雇用契約書・賃金台帳", "支給申請書", "出勤簿・タイムカード", "労働保険料の納付を証明する書類"],
+    jinzai: ["事業内職業能力開発計画・年間職業能力開発計画届（事前提出必須）", "訓練カリキュラム・訓練実施計画届", "訓練日誌・出勤簿", "訓練費用の領収書・支払証憑", "賃金台帳", "支給申請書"]
+  };
+
+  var FAQ_ITEMS = [
+    { q: "助成金と補助金はどう違うのですか？", a: "「助成金」は主に厚生労働省が実施し、審査による競争選抜がなく、要件を満たせば原則として支給される。一方「補助金」は経済産業省・中小企業庁等が実施することが多く、予算上限のある競争審査型で、申請しても採択されない可能性がある。本サイトは助成金のみを対象とし、補助金は扱わない。" },
+    { q: "「計画届」「実施計画」とは何ですか？なぜ必要なのですか？", a: "多くの助成金は、取り組み（正社員化・研修・雇用管理制度の導入等）を開始する前に、労働局やハローワークへ計画を事前に届け出て受理される必要がある。事後に取り組みを始めてから申請しても対象外になる制度が多いため、着手前の届出が最も重要な注意点。" },
+    { q: "助成金は複数同時に受給できますか？", a: "同一の取り組み・同一の経費に対して複数の助成金を重複して受給することは原則できない。制度ごとに併給調整の規定があるため、複数の助成金の活用を検討する場合は事前にハローワーク・労働局へ確認することが望ましい。" },
+    { q: "助成金が支給されないのはどんな場合ですか？", a: "労働保険料の滞納、直近の重大な労働関係法令違反、不当な解雇の実施、計画届の未提出・期限超過、必要書類（賃金台帳・出勤簿等）の不備などが主な不支給理由になる。" },
+    { q: "制度の内容はいつ時点のものですか？", a: "本サイトの情報は公開されている公式情報に基づく試算であり、定期的に更新しているが、申請前には必ず各制度の公式サイト・パンフレットで最新の要件・金額を確認すること。制度が終了・改廃された場合は随時掲載から除外している。" }
+  ];
+
+  // ---------- お気に入り保存（localStorage） ----------
+  function getFavorites() {
+    try { var raw = localStorage.getItem('savedPrograms'); return raw ? JSON.parse(raw) : []; } catch (e) { return []; }
+  }
+  function saveFavoritesList(arr) {
+    try { localStorage.setItem('savedPrograms', JSON.stringify(arr)); } catch (e) {}
+  }
+  function toggleFavorite(key) {
+    var favs = getFavorites();
+    var pos = favs.indexOf(key);
+    if (pos === -1) favs.push(key); else favs.splice(pos, 1);
+    saveFavoritesList(favs);
+    updateFavoriteStars();
+    renderFavPanel();
+  }
+  function updateFavoriteStars() {
+    var favs = getFavorites();
+    document.querySelectorAll('.fav-star').forEach(function (btn) {
+      var key = btn.getAttribute('data-key');
+      var active = favs.indexOf(key) !== -1;
+      btn.classList.toggle('active', active);
+      btn.textContent = active ? '★' : '☆';
+      btn.setAttribute('aria-label', active ? '保存済み（クリックで解除）' : '保存する');
+    });
+  }
+  function renderFavPanel() {
+    var panel = document.getElementById('favPanel');
+    var chipsEl = document.getElementById('favChips');
+    if (!panel || !chipsEl) return;
+    var favs = getFavorites();
+    panel.classList.toggle('has-items', favs.length > 0);
+    chipsEl.innerHTML = favs.map(function (key) {
+      var p = PROGRAMS[key];
+      var name = p ? p.name : key;
+      return '<span class="fav-chip">' + name + '<button type="button" onclick="toggleFavorite(\'' + key + '\')" aria-label="削除">✕</button></span>';
+    }).join('');
+  }
+
+  // ---------- 制度一覧（02） ----------
+  function renderProgramList() {
+    var keys = Object.keys(PROGRAMS);
+    document.getElementById('heroProgramCount').textContent = keys.length;
+    document.getElementById('programCountInline').textContent = keys.length;
+    var html = keys.map(function (k) {
+      var p = PROGRAMS[k];
+      return '<div class="cond-card" data-key="' + k + '" id="prog-' + k + '">' +
+        '<div class="cond-head"><div class="stack"><span class="pill">' + p.name + '</span><span class="sub">' + p.category + '</span></div>' +
+        '<a class="src-link" href="' + p.link + '" target="_blank" rel="noopener noreferrer">' + p.linkLabel + ' ↗</a>' +
+        '<button type="button" class="fav-star" data-key="' + k + '" onclick="toggleFavorite(\'' + k + '\')">☆</button></div>' +
+        '<div class="pd-grid">' +
+          '<div class="pd-item"><div class="k">支給対象者</div><div class="v">' + p.scale + '</div></div>' +
+          '<div class="pd-item"><div class="k">支給対象となる取り組み</div><div class="v">' + p.expense + '</div></div>' +
+          '<div class="pd-item"><div class="k">助成率</div><div class="v tabular">' + p.rate + '</div></div>' +
+          '<div class="pd-item"><div class="k">上限額</div><div class="v tabular">' + p.cap + '</div></div>' +
+          '<div class="pd-item"><div class="k">賃金上昇要件</div><div class="v">' + p.wage + '</div></div>' +
+          '<div class="pd-item"><div class="k">受付期間</div><div class="v">' + p.schedule + '</div></div>' +
+          '<div class="pd-item"><div class="k">制度の継続性</div><div class="v">' + p.continuity + '</div></div>' +
+        '</div>' +
+        '<div class="pd-note">' + p.note + '</div>' +
+      '</div>';
+    }).join('');
+    document.getElementById('programList').innerHTML = html;
+    updateFavoriteStars();
+  }
+
+  // ---------- 診断（01） ----------
+  function renderDiagCheckboxes() {
+    var grid = document.getElementById('diagCheckGrid');
+    var html = DIAGNOSIS_QUESTIONS.map(function (q) {
+      return '<label class="cat-check"><input type="checkbox" value="' + q.key + '" onchange="runDiagnosis()"><span>' + q.label + '</span></label>';
+    }).join('');
+    grid.innerHTML = html;
+  }
+
+  function getCheckedDiagKeys() {
+    var boxes = document.querySelectorAll('#diagCheckGrid input[type="checkbox"]:checked');
+    return Array.prototype.map.call(boxes, function (b) { return b.value; });
+  }
+
+  function runDiagnosis() {
+    var checked = getCheckedDiagKeys();
+    var out = document.getElementById('diagResult');
+    document.querySelectorAll('.cond-card[data-key]').forEach(function (card) { card.classList.remove('dim'); });
+    if (checked.length === 0) {
+      out.innerHTML = '<div class="diag-hint">当てはまる項目を1つ以上選択すると、該当する制度が下に表示されます。</div>';
+      return;
+    }
+    var matchedKeys = Object.keys(PROGRAMS).filter(function (k) {
+      var mw = PROGRAMS[k].matchesWhen || [];
+      return mw.some(function (m) { return checked.indexOf(m) !== -1; });
+    });
+    document.querySelectorAll('.cond-card[data-key]').forEach(function (card) {
+      var k = card.getAttribute('data-key');
+      if (matchedKeys.indexOf(k) === -1) card.classList.add('dim');
+    });
+    if (matchedKeys.length === 0) {
+      out.innerHTML = '<div class="sim-panel alert">選択した内容に該当する制度は見つかりませんでした。「制度一覧」で全件をご確認ください。</div>';
+      return;
+    }
+    var chipsHTML = matchedKeys.map(function (k) {
+      return '<a href="#prog-' + k + '" class="match-tag">✓ ' + PROGRAMS[k].name + '</a>';
+    }).join('');
+    out.innerHTML = '<div class="sim-panel ok"><div class="sim-headline">◎ 該当する可能性がある制度（' + matchedKeys.length + '件）</div>' +
+      '<div style="margin-top:0.8rem; display:flex; flex-wrap:wrap; gap:0.5rem;">' + chipsHTML + '</div>' +
+      '<div class="sim-note">クリックすると「制度一覧」の該当カードにジャンプします。該当しない制度は一覧内で淡色表示されます。</div></div>';
+  }
+
+  // ---------- 制度比較表（03） ----------
+  function getCheckedCompareKeys() {
+    var boxes = document.querySelectorAll('#compareCheckGrid input[type="checkbox"]:checked');
+    return Array.prototype.map.call(boxes, function (b) { return b.value; });
+  }
+  function renderCompareCheckboxes() {
+    var grid = document.getElementById('compareCheckGrid');
+    var keys = Object.keys(PROGRAMS);
+    var html = keys.map(function (k, idx) {
+      var checked = idx < 2 ? ' checked' : '';
+      return '<label class="cat-check"><input type="checkbox" value="' + k + '"' + checked + ' onchange="runCompare()"><span>' + PROGRAMS[k].name + '</span></label>';
+    }).join('');
+    grid.innerHTML = html;
+    runCompare();
+  }
+  function runCompare() {
+    var wrap = document.getElementById('compareTableWrap');
+    var boxes = document.querySelectorAll('#compareCheckGrid input[type="checkbox"]');
+    var checked = Array.prototype.filter.call(boxes, function (b) { return b.checked; });
+    if (checked.length > 4) {
+      checked[checked.length - 1].checked = false;
+      wrap.innerHTML = '<p class="section-sub">比較できるのは最大4件までです。1件選択を外してください。</p>';
+      return;
+    }
+    var keys = Array.prototype.map.call(checked, function (b) { return b.value; });
+    if (keys.length < 2) {
+      wrap.innerHTML = '<p class="section-sub">比較するには2件以上選択してください。</p>';
+      return;
+    }
+    var rows = [
+      ['支給対象者', function (p) { return p.scale; }],
+      ['支給対象となる取り組み', function (p) { return p.expense; }],
+      ['助成率', function (p) { return p.rate; }],
+      ['上限額', function (p) { return p.cap; }],
+      ['賃金上昇要件', function (p) { return p.wage; }],
+      ['受付期間', function (p) { return p.schedule; }],
+      ['制度の継続性', function (p) { return p.continuity; }]
+    ];
+    var theadHTML = '<tr><th>項目</th>' + keys.map(function (k) { return '<th>' + PROGRAMS[k].name + '</th>'; }).join('') + '</tr>';
+    var tbodyHTML = rows.map(function (row) {
+      return '<tr><th>' + row[0] + '</th>' + keys.map(function (k) { return '<td>' + row[1](PROGRAMS[k]) + '</td>'; }).join('') + '</tr>';
+    }).join('');
+    tbodyHTML += '<tr><th>公式リンク</th>' + keys.map(function (k) {
+      var p = PROGRAMS[k];
+      return '<td><a class="src-link" href="' + p.link + '" target="_blank" rel="noopener noreferrer">' + p.linkLabel + ' ↗</a></td>';
+    }).join('') + '</tr>';
+    wrap.innerHTML = '<table class="compare-table"><thead>' + theadHTML + '</thead><tbody>' + tbodyHTML + '</tbody></table>';
+  }
+
+  // ---------- 概算シミュレーター＋AIアドバイス＋チェックリスト（04） ----------
+  function renderSimProgramSelect() {
+    var sel = document.getElementById('simProgram');
+    sel.innerHTML = Object.keys(PROGRAMS).map(function (k) {
+      return '<option value="' + k + '">' + PROGRAMS[k].name + '</option>';
+    }).join('');
+  }
+
+  // ルールベースの擬似AIアドバイス。既存のPROGRAMSデータから条件分岐で助言文を組み立てる（外部AI APIは呼び出さない）
+  function generateAdviceHTML(progKey, prog) {
+    var lines = [];
+    lines.push('「' + prog.name + '」は' + prog.scale + 'を対象とする制度です。要件を満たしているか、下のチェックリストで確認してください。');
+    if (prog.wage && prog.wage.indexOf('不要') === -1 && prog.wage.indexOf('明記なし') === -1) {
+      lines.push('賃金に関する要件があります：' + prog.wage);
+    }
+    lines.push('助成金の多くは取り組みを開始する前に「計画届」等の事前手続きが必要です。着手前に必ず要件を確認してください。');
+    lines.push('受付期間・要件は年度により変更されることがあるため、申請直前に必ず公式サイトで最新情報を確認してください。');
+    var itemsHTML = lines.map(function (l) { return '<li>' + l + '</li>'; }).join('');
+    return '<div class="sim-panel advice"><div class="sim-headline">💡 AIアドバイス</div>' +
+      '<ul class="item-list">' + itemsHTML + '</ul>' +
+      '<div class="advice-disclaimer">本アドバイスはルールベースの自動生成です。実際の支給可否・支給要件は専門家・公式窓口にご確認ください。</div></div>';
+  }
+
+  function getChecklistState(progKey) {
+    try { var raw = localStorage.getItem('checklist_' + progKey); return raw ? JSON.parse(raw) : []; } catch (e) { return []; }
+  }
+  function onChecklistToggle(progKey, idx, isChecked) {
+    var state = getChecklistState(progKey);
+    var pos = state.indexOf(idx);
+    if (isChecked && pos === -1) state.push(idx);
+    if (!isChecked && pos !== -1) state.splice(pos, 1);
+    try { localStorage.setItem('checklist_' + progKey, JSON.stringify(state)); } catch (e) {}
+  }
+  function buildChecklistHTML(progKey) {
+    var docs = PROGRAM_REQUIRED_DOCS[progKey];
+    if (!docs) return '';
+    var checkedState = getChecklistState(progKey);
+    var itemsHTML = docs.map(function (d, i) {
+      var checked = checkedState.indexOf(i) !== -1 ? ' checked' : '';
+      return '<label><input type="checkbox"' + checked + ' onchange="onChecklistToggle(\'' + progKey + '\', ' + i + ', this.checked)"><span>' + d + '</span></label>';
+    }).join('');
+    return '<div class="sim-panel checklist"><div class="sim-headline">📋 申請準備チェックリスト</div>' +
+      '<div class="doc-checklist">' + itemsHTML + '</div>' +
+      '<div class="advice-disclaimer">制度・年度により必要書類は変動します。申請前に必ず最新の公式情報で確認してください。</div></div>';
+  }
+
+  function runSimulation() {
+    var progKey = document.getElementById('simProgram').value;
+    var count = parseInt(document.getElementById('simCount').value, 10);
+    var prog = PROGRAMS[progKey];
+    var out = document.getElementById('simResult');
+    if (!prog) { out.innerHTML = ''; return; }
+    var html = '';
+    if (prog.unitAmount) {
+      var total = prog.unitAmount * count;
+      html += '<div class="sim-panel ok"><div class="sim-headline">◎ 概算受給額の目安' +
+        '<button type="button" class="fav-star" data-key="' + progKey + '" onclick="toggleFavorite(\'' + progKey + '\')">☆</button></div>' +
+        '<div class="sim-big tabular">' + total.toLocaleString() + '円</div>' +
+        '<div class="sim-calc">対象' + count + '人 × 目安単価 ' + prog.unitAmount.toLocaleString() + '円' + (prog.unitAmountNote ? '（' + prog.unitAmountNote + '）' : '') + '</div>' +
+        '<div class="sim-note"><ul><li>本試算は概算であり、実際の支給額は審査（要件確認）の結果により変動します。</li></ul></div></div>';
+    } else {
+      html += '<div class="sim-panel ok"><div class="sim-headline">この制度の上限額' +
+        '<button type="button" class="fav-star" data-key="' + progKey + '" onclick="toggleFavorite(\'' + progKey + '\')">☆</button></div>' +
+        '<div class="sim-big tabular">' + prog.cap + '</div>' +
+        '<div class="sim-calc">助成率：' + prog.rate + '（人数単価が定まっていない制度のため、実際の受給額は取り組み内容により個別に算定されます）</div></div>';
+    }
+    html += generateAdviceHTML(progKey, prog);
+    html += buildChecklistHTML(progKey);
+    out.innerHTML = html;
+    updateFavoriteStars();
+  }
+
+  // ---------- FAQ（05） ----------
+  function renderFAQ() {
+    var html = FAQ_ITEMS.map(function (f) {
+      return '<details class="faq-card"><summary>' + f.q + '<span class="chevron">▶</span></summary><div class="faq-body">' + f.a + '</div></details>';
+    }).join('');
+    document.getElementById('faqList').innerHTML = html;
+  }
+
+  // ---------- init ----------
+  renderProgramList();
+  renderDiagCheckboxes();
+  runDiagnosis();
+  renderCompareCheckboxes();
+  renderSimProgramSelect();
+  runSimulation();
+  renderFAQ();
+  renderFavPanel();
+  updateFavoriteStars();
+</script>
+</body>
+</html>
