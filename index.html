@@ -69,18 +69,26 @@
   nav.toc a { font-size: 0.82rem; color: var(--ink-soft); text-decoration: none; white-space: nowrap; }
   nav.toc a:hover { color: var(--accent); }
 
-  .fav-panel { max-width: 880px; margin: 0 auto; padding: 0 1.5rem; display: none; }
-  .fav-panel.has-items { display: block; }
+  .fav-panel { max-width: 880px; margin: 0 auto; padding: 0 1.5rem; }
   .fav-panel-inner { background: var(--paper-raised); border: 1px solid var(--line); border-radius: 8px; padding: 0.9rem 1.1rem; margin: 1rem 0 0; display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem 0.9rem; }
-  .fav-panel-label { font-size: 0.78rem; color: var(--ink-faint); font-weight: 600; }
+  .fav-panel-label { font-size: 0.78rem; color: var(--ink-faint); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+  .fav-empty-hint { font-size: 0.84rem; color: var(--ink-faint); }
   .fav-chip { display: inline-flex; align-items: center; gap: 0.4rem; background: var(--accent-wash); color: var(--ink); border-radius: 100px; padding: 0.25rem 0.5rem 0.25rem 0.75rem; font-size: 0.82rem; }
   .fav-chip button { appearance: none; border: none; background: none; color: var(--ink-faint); cursor: pointer; font-size: 0.85rem; line-height: 1; padding: 0.1rem; }
   .fav-chip button:hover { color: var(--rust); }
   .fav-print-btn { appearance: none; border: 1px solid var(--accent); background: var(--paper); color: var(--accent); border-radius: 6px; padding: 0.4rem 0.8rem; font-size: 0.82rem; cursor: pointer; margin-left: auto; }
   .fav-print-btn:hover { background: var(--accent-wash); }
-  .fav-star { appearance: none; -webkit-appearance: none; border: 1px solid var(--line); background: var(--paper); color: var(--ink-faint); border-radius: 100px; width: 2rem; height: 2rem; flex-shrink: 0; font-size: 1rem; line-height: 1; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; margin-left: auto; }
+  .fav-star {
+    appearance: none; -webkit-appearance: none; border: 1px solid var(--line); background: var(--paper); color: var(--ink-faint);
+    border-radius: 100px; width: 2rem; height: 2rem; flex-shrink: 0; font-size: 1.05rem; line-height: 1; cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center; margin-left: auto;
+    transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+  }
   .fav-star:hover, .fav-star:focus-visible { border-color: var(--accent); color: var(--accent); outline: none; }
-  .fav-star.active { background: var(--accent-wash); border-color: var(--accent); color: var(--accent); }
+  .fav-star.active {
+    background: var(--accent); border-color: var(--accent); color: var(--paper-raised);
+    box-shadow: 0 1px 4px var(--shadow); transform: scale(1.08);
+  }
 
   main { max-width: 880px; margin: 0 auto; padding: 0 1.5rem; }
   section { padding: 2.6rem 0; border-bottom: 1px solid var(--line); }
@@ -125,10 +133,16 @@
   .diag-result { margin-top: 1.4rem; }
   .diag-hint { font-size: 0.85rem; color: var(--ink-faint); padding: 0.9rem 1rem; border: 1px dashed var(--line); border-radius: 6px; }
 
-  /* ---------- Program cards (02) ---------- */
+  /* ---------- Program cards (02) — collapsible ---------- */
   .cond-list { display: flex; flex-direction: column; gap: 1rem; margin-top: 1.2rem; }
-  .cond-card { background: var(--paper-raised); border: 1px solid var(--line); border-radius: 8px; padding: 1.3rem 1.4rem; box-shadow: 0 1px 2px var(--shadow); }
-  .cond-card.dim { opacity: 0.4; }
+  details.cond-card { background: var(--paper-raised); border: 1px solid var(--line); border-radius: 8px; box-shadow: 0 1px 2px var(--shadow); }
+  details.cond-card.dim { opacity: 0.4; }
+  details.cond-card > summary { list-style: none; cursor: pointer; padding: 1.1rem 1.4rem; display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem 1rem; }
+  details.cond-card > summary::-webkit-details-marker { display: none; }
+  details.cond-card > summary::marker { content: ""; }
+  .cond-summary-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 0.25rem; }
+  .cond-summary-cap { font-size: 0.83rem; color: var(--ink-soft); }
+  .cond-body { padding: 0 1.4rem 1.3rem; border-top: 1px dashed var(--line); margin-top: 0.3rem; padding-top: 1rem; }
   .cond-head { display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem 1rem; padding-bottom: 0.9rem; margin-bottom: 0.2rem; border-bottom: 1px dashed var(--line); }
   .cond-head .stack { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 0.2rem; }
   .stack .sub { font-size: 0.76rem; color: var(--ink-faint); font-weight: 400; }
@@ -140,7 +154,8 @@
   .pd-item .v { font-size: 0.92rem; line-height: 1.6; }
   .pd-item-wide { grid-column: 1 / -1; }
   .pd-note { margin-top: 1rem; font-size: 0.84rem; color: var(--ink-soft); background: var(--sage-wash); border-radius: 6px; padding: 0.7rem 0.9rem; }
-  .match-tag { display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.74rem; font-weight: 600; color: var(--accent); background: var(--accent-wash); border-radius: 100px; padding: 0.15rem 0.6rem; margin-left: 0.4rem; }
+  .match-tag { display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.74rem; font-weight: 600; color: var(--accent); background: var(--accent-wash); border-radius: 100px; padding: 0.15rem 0.6rem; margin-left: 0.4rem; border: none; cursor: pointer; font-family: inherit; }
+  .match-tag:hover { background: var(--accent); color: var(--paper-raised); }
 
   /* ---------- Comparison table (03) ---------- */
   .compare-table-wrap { overflow-x: auto; margin-top: 1.2rem; }
@@ -229,6 +244,7 @@
 
 <nav class="toc">
   <div class="row">
+    <a href="#favorites">☆ お気に入り</a>
     <a href="#about">助成金とは</a>
     <a href="#diagnosis">診断</a>
     <a href="#programs">制度一覧</a>
@@ -239,11 +255,11 @@
   </div>
 </nav>
 
-<div class="fav-panel" id="favPanel">
+<div class="fav-panel" id="favorites">
   <div class="fav-panel-inner">
-    <span class="fav-panel-label">☆ 保存した制度</span>
+    <span class="fav-panel-label">☆ お気に入り</span>
     <div id="favChips" style="display:flex; flex-wrap:wrap; gap:0.5rem;"></div>
-    <button type="button" class="fav-print-btn" onclick="window.print()">印刷 / PDF保存</button>
+    <button type="button" class="fav-print-btn" id="favPrintBtn" onclick="window.print()">印刷 / PDF保存</button>
   </div>
 </div>
 
@@ -300,7 +316,7 @@
           <label for="simCount">② 対象人数</label>
           <div class="dial-row">
             <div class="dial-readout" id="simCountReadout">1人</div>
-            <input type="range" id="simCount" min="1" max="20" step="1" value="1" oninput="onSimCountInput(this.value)">
+            <input type="range" id="simCount" min="1" max="100" step="1" value="1" oninput="onSimCountInput(this.value)">
           </div>
         </div>
       </div>
@@ -578,11 +594,15 @@
     });
   }
   function renderFavPanel() {
-    var panel = document.getElementById('favPanel');
     var chipsEl = document.getElementById('favChips');
-    if (!panel || !chipsEl) return;
+    var printBtn = document.getElementById('favPrintBtn');
+    if (!chipsEl) return;
     var favs = getFavorites();
-    panel.classList.toggle('has-items', favs.length > 0);
+    if (printBtn) printBtn.style.display = favs.length > 0 ? '' : 'none';
+    if (favs.length === 0) {
+      chipsEl.innerHTML = '<span class="fav-empty-hint">気になる制度の☆ボタンを押すと、ここに保存されます。</span>';
+      return;
+    }
     chipsEl.innerHTML = favs.map(function (key) {
       var p = PROGRAMS[key];
       var name = p ? p.name : key;
@@ -595,23 +615,30 @@
     var keys = Object.keys(PROGRAMS);
     document.getElementById('heroProgramCount').textContent = keys.length;
     document.getElementById('programCountInline').textContent = keys.length;
-    var html = keys.map(function (k) {
+    var html = keys.map(function (k, idx) {
       var p = PROGRAMS[k];
-      return '<div class="cond-card" data-key="' + k + '" id="prog-' + k + '">' +
-        '<div class="cond-head"><div class="stack"><span class="pill">' + p.name + '</span><span class="sub">' + p.category + '</span></div>' +
-        '<a class="src-link" href="' + p.link + '" target="_blank" rel="noopener noreferrer">' + p.linkLabel + ' ↗</a>' +
-        '<button type="button" class="fav-star" data-key="' + k + '" onclick="toggleFavorite(\'' + k + '\')">☆</button></div>' +
-        '<div class="pd-grid">' +
-          '<div class="pd-item"><div class="k">支給対象者</div><div class="v">' + p.scale + '</div></div>' +
-          '<div class="pd-item"><div class="k">支給対象となる取り組み</div><div class="v">' + p.expense + '</div></div>' +
-          '<div class="pd-item"><div class="k">助成率</div><div class="v tabular">' + p.rate + '</div></div>' +
-          '<div class="pd-item"><div class="k">上限額</div><div class="v tabular">' + p.cap + '</div></div>' +
-          '<div class="pd-item"><div class="k">賃金上昇要件</div><div class="v">' + p.wage + '</div></div>' +
-          '<div class="pd-item"><div class="k">受付期間</div><div class="v">' + p.schedule + '</div></div>' +
-          '<div class="pd-item"><div class="k">制度の継続性</div><div class="v">' + p.continuity + '</div></div>' +
+      var openAttr = idx === 0 ? ' open' : '';
+      return '<details class="cond-card" data-key="' + k + '" id="prog-' + k + '"' + openAttr + '>' +
+        '<summary>' +
+          '<div class="cond-summary-text"><span class="pill">' + p.name + '</span><span class="cond-summary-cap">上限額：' + p.cap + '</span></div>' +
+          '<button type="button" class="fav-star" data-key="' + k + '" onclick="toggleFavorite(\'' + k + '\'); event.preventDefault(); event.stopPropagation();">☆</button>' +
+          '<span class="chevron">▶</span>' +
+        '</summary>' +
+        '<div class="cond-body">' +
+          '<div class="cond-head"><div class="stack"><span class="sub">' + p.category + '</span></div>' +
+          '<a class="src-link" href="' + p.link + '" target="_blank" rel="noopener noreferrer">' + p.linkLabel + ' ↗</a></div>' +
+          '<div class="pd-grid">' +
+            '<div class="pd-item"><div class="k">支給対象者</div><div class="v">' + p.scale + '</div></div>' +
+            '<div class="pd-item"><div class="k">支給対象となる取り組み</div><div class="v">' + p.expense + '</div></div>' +
+            '<div class="pd-item"><div class="k">助成率</div><div class="v tabular">' + p.rate + '</div></div>' +
+            '<div class="pd-item"><div class="k">上限額</div><div class="v tabular">' + p.cap + '</div></div>' +
+            '<div class="pd-item"><div class="k">賃金上昇要件</div><div class="v">' + p.wage + '</div></div>' +
+            '<div class="pd-item"><div class="k">受付期間</div><div class="v">' + p.schedule + '</div></div>' +
+            '<div class="pd-item"><div class="k">制度の継続性</div><div class="v">' + p.continuity + '</div></div>' +
+          '</div>' +
+          '<div class="pd-note">' + p.note + '</div>' +
         '</div>' +
-        '<div class="pd-note">' + p.note + '</div>' +
-      '</div>';
+      '</details>';
     }).join('');
     document.getElementById('programList').innerHTML = html;
     updateFavoriteStars();
@@ -663,11 +690,18 @@
       return;
     }
     var chipsHTML = matchedKeys.map(function (k) {
-      return '<a href="#prog-' + k + '" class="match-tag">✓ ' + PROGRAMS[k].name + '</a>';
+      return '<button type="button" class="match-tag" onclick="jumpToProgram(\'' + k + '\')">✓ ' + PROGRAMS[k].name + '</button>';
     }).join('');
     out.innerHTML = '<div class="sim-panel ok"><div class="sim-headline">◎ 該当する可能性がある制度（' + matchedKeys.length + '件）</div>' +
       '<div style="margin-top:0.8rem; display:flex; flex-wrap:wrap; gap:0.5rem;">' + chipsHTML + '</div>' +
-      '<div class="sim-note">クリックすると「制度一覧」の該当カードにジャンプします。該当しない制度は一覧内で淡色表示されます。</div></div>';
+      '<div class="sim-note">クリックすると「制度一覧」の該当カードが開いてジャンプします。該当しない制度は一覧内で淡色表示されます。</div></div>';
+  }
+
+  function jumpToProgram(key) {
+    var el = document.getElementById('prog-' + key);
+    if (!el) return;
+    el.open = true;
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
   // ---------- 制度比較表（03） ----------
