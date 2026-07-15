@@ -101,6 +101,22 @@
     background-size: 1rem; color: var(--ink); appearance: none; -webkit-appearance: none; cursor: pointer;
   }
   .picker select:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .dial-row { display: flex; flex-direction: column; gap: 0.6rem; }
+  .dial-readout { font-family: 'Fraunces', serif; font-weight: 600; font-size: 1.5rem; color: var(--accent); }
+  input[type="range"] {
+    -webkit-appearance: none; appearance: none; width: 100%; height: 6px; border-radius: 100px;
+    background: var(--line); outline: none; cursor: pointer; margin: 0.4rem 0;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none; width: 22px; height: 22px; border-radius: 50%;
+    background: var(--accent); border: 3px solid var(--paper-raised); box-shadow: 0 1px 3px var(--shadow); cursor: pointer;
+  }
+  input[type="range"]::-moz-range-thumb {
+    width: 22px; height: 22px; border-radius: 50%; background: var(--accent);
+    border: 3px solid var(--paper-raised); box-shadow: 0 1px 3px var(--shadow); cursor: pointer;
+  }
+  input[type="range"]::-moz-range-track { background: var(--line); height: 6px; border-radius: 100px; }
+  input[type="range"]:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
   .cat-check-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; margin-top: 0.6rem; }
   @media (max-width: 640px) { .cat-check-grid { grid-template-columns: 1fr; } }
   .cat-check { display: flex; align-items: center; gap: 0.6rem; padding: 0.6rem 0.8rem; border: 1px solid var(--line); border-radius: 6px; background: var(--paper); font-size: 0.88rem; cursor: pointer; }
@@ -243,13 +259,10 @@
     <p class="section-sub">当てはまる取り組み・予定をチェックすると、活用できる可能性がある助成金が絞り込まれる。</p>
     <div class="picker">
       <label for="diagEmployees">常時使用する従業員数</label>
-      <select id="diagEmployees" onchange="runDiagnosis()">
-        <option value="t20">20人以下</option>
-        <option value="t50">21〜50人</option>
-        <option value="t100">51〜100人</option>
-        <option value="t300">101〜300人</option>
-        <option value="t301">301人以上</option>
-      </select>
+      <div class="dial-row">
+        <div class="dial-readout" id="diagEmployeesReadout">20人以下</div>
+        <input type="range" id="diagEmployees" min="0" max="4" step="1" value="0" oninput="onDiagEmployeesInput(this.value)">
+      </div>
       <div style="margin-top:1.1rem;">
         <label>当てはまるものをすべて選択（複数選択可）</label>
         <div class="cat-check-grid" id="diagCheckGrid"></div>
@@ -276,7 +289,7 @@
 
   <section id="simulator">
     <div class="section-head"><span class="section-no jp-serif">04</span><h2>概算シミュレーター</h2></div>
-    <p class="section-sub">使いたい制度・対象人数・従業員規模を選ぶと、見込める概算受給額とAIアドバイス・申請準備チェックリストを表示する。</p>
+    <p class="section-sub">使いたい制度・対象人数・従業員規模を選ぶと、見込める概算受給額と制度活用のヒント・申請準備チェックリストを表示する。</p>
     <div class="picker">
       <div class="sim-grid">
         <div>
@@ -285,13 +298,10 @@
         </div>
         <div>
           <label for="simCount">② 対象人数</label>
-          <select id="simCount" onchange="runSimulation()">
-            <option value="1">1人</option>
-            <option value="2">2人</option>
-            <option value="3">3人</option>
-            <option value="5">5人</option>
-            <option value="10">10人</option>
-          </select>
+          <div class="dial-row">
+            <div class="dial-readout" id="simCountReadout">1人</div>
+            <input type="range" id="simCount" min="1" max="20" step="1" value="1" oninput="onSimCountInput(this.value)">
+          </div>
         </div>
       </div>
       <div class="sim-result" id="simResult"></div>
@@ -621,6 +631,17 @@
     return Array.prototype.map.call(boxes, function (b) { return b.value; });
   }
 
+  var DIAG_EMPLOYEE_TIER_LABELS = ["20人以下", "21〜50人", "51〜100人", "101〜300人", "301人以上"];
+  function onDiagEmployeesInput(idx) {
+    document.getElementById('diagEmployeesReadout').textContent = DIAG_EMPLOYEE_TIER_LABELS[idx];
+    runDiagnosis();
+  }
+
+  function onSimCountInput(val) {
+    document.getElementById('simCountReadout').textContent = val + '人';
+    runSimulation();
+  }
+
   function runDiagnosis() {
     var checked = getCheckedDiagKeys();
     var out = document.getElementById('diagResult');
@@ -698,7 +719,7 @@
     wrap.innerHTML = '<table class="compare-table"><thead>' + theadHTML + '</thead><tbody>' + tbodyHTML + '</tbody></table>';
   }
 
-  // ---------- 概算シミュレーター＋AIアドバイス＋チェックリスト（04） ----------
+  // ---------- 概算シミュレーター＋制度活用のヒント＋チェックリスト（04） ----------
   function renderSimProgramSelect() {
     var sel = document.getElementById('simProgram');
     sel.innerHTML = Object.keys(PROGRAMS).map(function (k) {
@@ -706,7 +727,7 @@
     }).join('');
   }
 
-  // ルールベースの擬似AIアドバイス。既存のPROGRAMSデータから条件分岐で助言文を組み立てる（外部AI APIは呼び出さない）
+  // ルールベースの擬似ヒント生成。既存のPROGRAMSデータから条件分岐で助言文を組み立てる（外部AI APIは呼び出さない）
   function generateAdviceHTML(progKey, prog) {
     var lines = [];
     lines.push('「' + prog.name + '」は' + prog.scale + 'を対象とする制度です。要件を満たしているか、下のチェックリストで確認してください。');
@@ -716,9 +737,9 @@
     lines.push('助成金の多くは取り組みを開始する前に「計画届」等の事前手続きが必要です。着手前に必ず要件を確認してください。');
     lines.push('受付期間・要件は年度により変更されることがあるため、申請直前に必ず公式サイトで最新情報を確認してください。');
     var itemsHTML = lines.map(function (l) { return '<li>' + l + '</li>'; }).join('');
-    return '<div class="sim-panel advice"><div class="sim-headline">💡 AIアドバイス</div>' +
+    return '<div class="sim-panel advice"><div class="sim-headline">💡 制度活用のヒント</div>' +
       '<ul class="item-list">' + itemsHTML + '</ul>' +
-      '<div class="advice-disclaimer">本アドバイスはルールベースの自動生成です。実際の支給可否・支給要件は専門家・公式窓口にご確認ください。</div></div>';
+      '<div class="advice-disclaimer">本ヒントはルールベースの自動生成です。実際の支給可否・支給要件は専門家・公式窓口にご確認ください。</div></div>';
   }
 
   function getChecklistState(progKey) {
