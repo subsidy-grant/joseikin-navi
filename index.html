@@ -686,11 +686,15 @@
   ];
 
   // ---------- お気に入り保存（localStorage） ----------
+  // キーは 'joseikin_' で名前空間化している。GitHub Pagesの同一オリジン（subsidy-grant.github.io）上に
+  // koban-roadmap等の姉妹サイトが同居しており、localStorageはパスではなくオリジン単位で共有されるため、
+  // 素の 'savedPrograms' キーのままだと他サイトのお気に入りと混ざってしまう
+  var FAV_STORAGE_KEY = 'joseikin_savedPrograms';
   function getFavorites() {
-    try { var raw = localStorage.getItem('savedPrograms'); return raw ? JSON.parse(raw) : []; } catch (e) { return []; }
+    try { var raw = localStorage.getItem(FAV_STORAGE_KEY); return raw ? JSON.parse(raw) : []; } catch (e) { return []; }
   }
   function saveFavoritesList(arr) {
-    try { localStorage.setItem('savedPrograms', JSON.stringify(arr)); } catch (e) {}
+    try { localStorage.setItem(FAV_STORAGE_KEY, JSON.stringify(arr)); } catch (e) {}
   }
   function toggleFavorite(key) {
     var favs = getFavorites();
@@ -933,14 +937,14 @@
   }
 
   function getChecklistState(progKey) {
-    try { var raw = localStorage.getItem('checklist_' + progKey); return raw ? JSON.parse(raw) : []; } catch (e) { return []; }
+    try { var raw = localStorage.getItem('joseikin_checklist_' + progKey); return raw ? JSON.parse(raw) : []; } catch (e) { return []; }
   }
   function onChecklistToggle(progKey, idx, isChecked) {
     var state = getChecklistState(progKey);
     var pos = state.indexOf(idx);
     if (isChecked && pos === -1) state.push(idx);
     if (!isChecked && pos !== -1) state.splice(pos, 1);
-    try { localStorage.setItem('checklist_' + progKey, JSON.stringify(state)); } catch (e) {}
+    try { localStorage.setItem('joseikin_checklist_' + progKey, JSON.stringify(state)); } catch (e) {}
   }
   function buildChecklistHTML(progKey) {
     var docs = PROGRAM_REQUIRED_DOCS[progKey];
